@@ -8,14 +8,21 @@ import org.springframework.context.annotation.PropertySource;
 
 import com.example.MySpringDemo.services.ColourPrinter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.example.MySpringDemo")
 @PropertySource("classpath:application.properties")
+
 public class MySpringDemoApplication implements CommandLineRunner{
 	
 	private ColourPrinter colourPrinter;
+	
+	private static final Logger log = LoggerFactory.getLogger(MySpringDemoApplication.class);
+
 	
 	
 
@@ -36,6 +43,7 @@ public class MySpringDemoApplication implements CommandLineRunner{
 		System.out.println("Hello Spring");
 		
 		System.out.println(colourPrinter.print());
+		log.info("Hello hello log.info");
 	}
 
 }
