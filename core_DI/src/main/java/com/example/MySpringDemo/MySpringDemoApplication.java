@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 @SpringBootApplication
 @ComponentScan(basePackages = "com.example.MySpringDemo")
 @PropertySource("classpath:application.properties")
-
 public class MySpringDemoApplication implements CommandLineRunner{
 	
 	private ColourPrinter colourPrinter;
