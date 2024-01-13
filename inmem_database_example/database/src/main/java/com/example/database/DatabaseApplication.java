@@ -33,6 +33,8 @@ public class DatabaseApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("Datasource: "+dataSource.toString());
+		
+		//JDBC API can be used to interact with the DB
 		final JdbcTemplate restTemplate = new JdbcTemplate(dataSource);
 		restTemplate.execute("select 1");
 	}
