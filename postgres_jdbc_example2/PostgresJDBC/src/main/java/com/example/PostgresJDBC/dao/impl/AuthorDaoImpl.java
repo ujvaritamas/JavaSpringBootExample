@@ -55,4 +55,20 @@ public class AuthorDaoImpl implements AuthorDao {
 		}
 		
 	}
+
+	@Override
+	public List<Author> find() {
+		// TODO Auto-generated method stub
+		return jdbcTemplate.query("SELECT id, name, age FROM authors",
+				new AuthorRowMapper());
+	}
+
+	@Override
+	public void update(Author author, Long id) {
+		// TODO Auto-generated method stub
+		jdbcTemplate.update(
+				"UPDATE authors SET id = ?, name = ?, age = ? WHERE id = ?",
+				author.getId(), author.getName(), author.getAge(), id
+				);
+	}
 }
