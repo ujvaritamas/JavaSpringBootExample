@@ -61,4 +61,12 @@ public class AuthorDaoImplTests {
 				ArgumentMatchers.eq(author.getAge()),
 				ArgumentMatchers.eq(author.getId()));
 	}
+	
+	@Test
+	public void testThatDeleteGeneratesCorrectSql() {
+		underTest.delete(1L);
+		
+		verify(jdbcTemplate).update(ArgumentMatchers.eq("DELETE from authors WHERE id = ?"), 
+				ArgumentMatchers.eq(1L));
+	}
 }

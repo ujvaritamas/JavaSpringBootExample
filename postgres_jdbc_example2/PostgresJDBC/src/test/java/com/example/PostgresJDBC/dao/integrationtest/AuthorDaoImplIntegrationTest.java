@@ -83,4 +83,17 @@ public class AuthorDaoImplIntegrationTest {
 		Optional<Author> resultlast = underTest.findOne(author.getId());
 		Assertions.assertThat(resultlast).isEmpty();
 	}
+	
+	@Test
+	public void testThatDeleteAuthor() {
+		Author author = TestDataUtils.createTestAuthor();
+		underTest.create(author);
+		
+		Optional<Author> result = underTest.findOne(author.getId());
+		Assertions.assertThat(result).isPresent();
+
+		underTest.delete(author.getId());
+		result = underTest.findOne(author.getId());
+		Assertions.assertThat(result).isEmpty();
+	}
 }

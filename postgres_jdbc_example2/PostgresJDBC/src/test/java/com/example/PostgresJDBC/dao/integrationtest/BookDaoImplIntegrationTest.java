@@ -80,7 +80,18 @@ public class BookDaoImplIntegrationTest {
 		
 		Optional<Book> resultlast = underTest.findOne(bookA.getIsbn());
 		Assertions.assertThat(resultlast).isEmpty();
+	}
+	
+	@Test
+	public void testThatDeleteBook() {
+		Book book = TestDataUtils.createTestBook(authorDao);
+		underTest.create(book);
+		Optional<Book> result = underTest.findOne(book.getIsbn());
+		Assertions.assertThat(result).isPresent();
 		
+		underTest.delete(book.getIsbn());
+		result = underTest.findOne(book.getIsbn());
+		Assertions.assertThat(result).isEmpty();
 	}
 
 }

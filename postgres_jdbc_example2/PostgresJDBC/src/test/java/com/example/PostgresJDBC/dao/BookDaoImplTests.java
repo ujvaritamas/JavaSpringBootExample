@@ -61,4 +61,11 @@ public class BookDaoImplTests {
 		verify(jdbcTemplate).update(ArgumentMatchers.eq("UPDATE books SET isbn = ?, title = ?, author_id = ? WHERE isbn = ?"), 
 				ArgumentMatchers.eq("myISBN"), ArgumentMatchers.eq("Test title1"), ArgumentMatchers.eq(1L), ArgumentMatchers.eq("myISBN"));
 	}
+	
+	@Test
+	public void testThatDeleteGeneratesCorrectSql() {
+		underTest.delete("myISBN");
+		verify(jdbcTemplate).update(ArgumentMatchers.eq("DELETE from books WHERE isbn = ?"), 
+				ArgumentMatchers.eq("myISBN"));
+	}
 }
