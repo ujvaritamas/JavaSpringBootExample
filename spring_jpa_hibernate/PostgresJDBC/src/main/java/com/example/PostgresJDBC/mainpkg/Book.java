@@ -28,6 +28,11 @@ public class Book {
 		this.title = title;
 		this.author = author;
 	}
+	
+	//This is needed because of @Entity
+	public Book() {
+		
+	}
 
 	public String getIsbn() {
 		return isbn;

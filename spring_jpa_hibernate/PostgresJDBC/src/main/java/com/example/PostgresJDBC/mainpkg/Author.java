@@ -48,6 +48,11 @@ public class Author {
 		this.name = name;
 		this.age = age;
 	}
+	
+	//this is needed because of @Entity
+	public Author() {
+		
+	}
 
 	public Long getId() {
 		return id;
