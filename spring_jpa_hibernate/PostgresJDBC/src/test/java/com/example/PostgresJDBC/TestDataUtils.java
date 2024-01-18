@@ -27,7 +27,7 @@ public final class TestDataUtils {
 	}
 	
 	
-	public static Book createTestBook(AuthorRepository authorRepo,Author author) {
+	public static Book createTestBook(Author author) {
 		
 		
 		/* not needed @ManyToOne(cascade = CascadeType.ALL)
@@ -40,7 +40,7 @@ public final class TestDataUtils {
 		return new Book("myISBN", "Test title1", author);
 	}
 	
-public static Book createTestBookWithAuthor(AuthorRepository authorDao, Author author, String testIsbn) {
+public static Book createTestBookWithAuthor(Author author, String testIsbn) {
 		
 	/*// Not needed Hibernate handle it because of this -> @ManyToOne(cascade = CascadeType.ALL)
 		if(!authorDao.findById(author.getId()).isPresent()) {

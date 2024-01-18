@@ -36,7 +36,7 @@ public class BookRepositoryIntegrationTests {
 		
 		//create author if it is not exists (it is required for the book)
 		Author author = TestDataUtils.createTestAuthor();
-		Book book = TestDataUtils.createTestBook(authorRepo, author);
+		Book book = TestDataUtils.createTestBook(author);
 				
 		underTest.save(book);
 
@@ -48,14 +48,14 @@ public class BookRepositoryIntegrationTests {
 	@Test
 	public void testThatMultipleBookCanBeCreatedAndRecalled() {
 		Author authorA = TestDataUtils.createTestAuthorA();
-		Book bookA = TestDataUtils.createTestBookWithAuthor(authorRepo, authorA, "TestA");
+		Book bookA = TestDataUtils.createTestBookWithAuthor(authorA, "TestA");
 		underTest.save(bookA);
 		
-		Book bookAA = TestDataUtils.createTestBookWithAuthor(authorRepo, authorA, "TestAA");
+		Book bookAA = TestDataUtils.createTestBookWithAuthor(authorA, "TestAA");
 		underTest.save(bookAA);
 		
 		Author authorB = TestDataUtils.createTestAuthorB();
-		Book bookB = TestDataUtils.createTestBookWithAuthor(authorRepo, authorB, "TestB");
+		Book bookB = TestDataUtils.createTestBookWithAuthor(authorB, "TestB");
 		underTest.save(bookB);
 		
 		Iterable<Book> result = underTest.findAll();
@@ -65,36 +65,34 @@ public class BookRepositoryIntegrationTests {
 		.containsExactly(bookA, bookAA, bookB);
 	}
 	
-//	@Test
-//	public void testThatUpdateBook() {
-//		Author authorA = TestDataUtils.createTestAuthorA();
-//		Book bookA = TestDataUtils.createTestBookWithAuthor(authorDao, authorA, "TestA");
-//		underTest.create(bookA);
-//		
-//		Book newBook = new Book("ttt", "AAA title", authorA.getId());
-//		
-//		bookA.setTitle("AAA");
-//		
-//		underTest.update(newBook, bookA.getIsbn());
-//		
-//		Optional<Book> result = underTest.findOne(newBook.getIsbn());
-//		Assertions.assertThat(result).isPresent();
-//		Assertions.assertThat(result.get()).isEqualTo(newBook);
-//		
-//		Optional<Book> resultlast = underTest.findOne(bookA.getIsbn());
-//		Assertions.assertThat(resultlast).isEmpty();
-//	}
-//	
-//	@Test
-//	public void testThatDeleteBook() {
-//		Book book = TestDataUtils.createTestBook(authorDao);
-//		underTest.create(book);
-//		Optional<Book> result = underTest.findOne(book.getIsbn());
-//		Assertions.assertThat(result).isPresent();
-//		
-//		underTest.delete(book.getIsbn());
-//		result = underTest.findOne(book.getIsbn());
-//		Assertions.assertThat(result).isEmpty();
-//	}
+	@Test
+	public void testThatUpdateBook() {
+		Author author = TestDataUtils.createTestAuthorA();
+		Book book = TestDataUtils.createTestBookWithAuthor(author, "TestA");
+		underTest.save(book);
+		
+		
+		book.setTitle("AAA");
+		
+		underTest.save(book);
+		
+		Optional<Book> result = underTest.findById(book.getIsbn());
+		Assertions.assertThat(result).isPresent();
+		Assertions.assertThat(result.get()).isEqualTo(book);
+		Assertions.assertThat(result.get().getTitle()).isEqualTo("AAA");
+	}
+	
+	@Test
+	public void testThatDeleteBook() {
+		Author author = TestDataUtils.createTestAuthorA();
+		Book book = TestDataUtils.createTestBook(author);
+		underTest.save(book);
+		Optional<Book> result = underTest.findById(book.getIsbn());
+		Assertions.assertThat(result).isPresent();
+		
+		underTest.delete(book);
+		result = underTest.findById(book.getIsbn());
+		Assertions.assertThat(result).isEmpty();
+	}
 
 }
