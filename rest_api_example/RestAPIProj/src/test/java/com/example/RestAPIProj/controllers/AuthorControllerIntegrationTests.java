@@ -140,4 +140,58 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.name").value(author0.getName())
         );
     }
+
+    @Test
+    public void testThatUpdateAuthorReturnsWithHttp200OK() throws Exception {
+        AuthorEntity author0 = TestDataUtils.createTestAuthorA();
+
+        String authorJson = objectMapper.writeValueAsString(author0);
+
+        authorService.createAuthor(author0);
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/authors/"+author0.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatUpdateAuthorReturnsNotFound() throws Exception {
+        AuthorEntity author0 = TestDataUtils.createTestAuthorA();
+
+        String authorJson = objectMapper.writeValueAsString(author0);
+
+        authorService.createAuthor(author0);
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/authors/"+(author0.getId()+33))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatUpdateAuthorReturnsWithUpdatedAuthor() throws Exception {
+        AuthorEntity author0 = TestDataUtils.createTestAuthorA();
+        authorService.createAuthor(author0);
+
+        AuthorEntity author1 = TestDataUtils.createTestAuthorB();
+        author1.setId(author0.getId());
+
+        String authorJson = objectMapper.writeValueAsString(author1);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/authors/"+author0.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value(author1.getName())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(author1.getAge())
+        );
+    }
 }

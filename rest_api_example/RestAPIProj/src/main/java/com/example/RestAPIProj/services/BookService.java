@@ -10,4 +10,12 @@ public interface BookService {
     List<BookEntity> findAll();
 
     Optional<BookEntity> findById(String isbn);
+
+    boolean isExists(String isbn);
+
+    BookEntity saveBook(BookEntity book);
+
+    BookEntity partialUpdate(String isbn, BookEntity book);
+
+    BookEntity deleteBook(String isbn);
 }

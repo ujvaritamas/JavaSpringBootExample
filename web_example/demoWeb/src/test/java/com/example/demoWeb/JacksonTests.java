@@ -16,6 +16,16 @@ public class JacksonTests {
 		
 		Book book = new Book("my_isbn", "my_title", "my_author", "my_publishDate");
 		String result = objectMapper.writeValueAsString(book);
-		assertThat(result).isEqualTo("{\"isbn\":\"my_isbn\",\"title\":\"my_title\",\"author\":\"my_author\",\"yearPublished\":\"my_publishDate\"}");
+		assertThat(result).isEqualTo("{\"isbn\":\"my_isbn\",\"title\":\"my_title\",\"author\":\"my_author\",\"year\":\"my_publishDate\"}");
+	}
+
+	@Test
+	public void testThatObjectMapperCanCreateJavaObjFromJson() throws JsonProcessingException {
+		String jsonObj = "{\"isbn\":\"my_isbn\",\"bar\":\"hh\", \"title\":\"my_title\",\"author\":\"my_author\",\"year\":\"my_publishDate\"}";
+		Book book = new Book("my_isbn", "my_title", "my_author", "my_publishDate");
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		Book result = objectMapper.readValue(jsonObj, Book.class);
+		assertThat(result).isEqualTo(book);
 	}
 }

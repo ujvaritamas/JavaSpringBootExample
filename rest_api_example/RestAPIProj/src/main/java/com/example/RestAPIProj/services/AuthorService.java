@@ -12,4 +12,12 @@ public interface AuthorService {
     List<AuthorEntity> findAll();
 
     Optional<AuthorEntity> findById(Long id);
+
+    Boolean isExists(Long id);
+
+    AuthorEntity saveAuthor(AuthorEntity authorEntity);
+
+    AuthorEntity partialUpdate(Long id, AuthorEntity author);
+
+    AuthorEntity deleteAuthor(Long id);
 }

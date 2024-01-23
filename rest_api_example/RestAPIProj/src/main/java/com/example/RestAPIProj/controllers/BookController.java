@@ -26,7 +26,14 @@ public class BookController {
     }
 
     @PutMapping("/books/{isbn}")
-    public ResponseEntity<BookDto> createBook(@PathVariable("isbn") String isbn, @RequestBody BookDto book){
+    public ResponseEntity<BookDto> createUpdateBook(@PathVariable("isbn") String isbn, @RequestBody BookDto book){
+        if(bookService.isExists(isbn)){
+            book.setIsbn(isbn);
+            BookEntity bookEntity = bookMapper.mapFrom(book);
+            BookEntity savedEntity = bookService.saveBook(bookEntity);
+            return new ResponseEntity<>(bookMapper.mapTo(savedEntity), HttpStatus.OK);
+        }
+
         BookEntity bookEntity = bookMapper.mapFrom(book);
         BookEntity savedEntity = bookService.createBook(isbn, bookEntity);
         return new ResponseEntity<>(bookMapper.mapTo(savedEntity), HttpStatus.CREATED);
@@ -54,4 +61,24 @@ public class BookController {
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
+    @PatchMapping(path = "/books/{isbn}")
+    public ResponseEntity<BookDto> partialUpdateBook(@PathVariable("isbn") String isbn, @RequestBody BookDto book){
+        if(!bookService.isExists(isbn)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        BookEntity bookEntity = bookMapper.mapFrom(book);
+        BookEntity updatedBookEntity = bookService.partialUpdate(isbn, bookEntity);
+        return new ResponseEntity<>(bookMapper.mapTo(updatedBookEntity), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/books/{isbn}")
+    public ResponseEntity<BookDto> deleteBook(@PathVariable("isbn") String isbn){
+        if(!bookService.isExists(isbn)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        BookEntity deletedBook = bookService.deleteBook(isbn);
+        return new ResponseEntity<>(bookMapper.mapTo(deletedBook), HttpStatus.OK);
+    }
+
 }

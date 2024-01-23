@@ -120,4 +120,16 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.status().isNotFound()
         );
     }
+
+    @Test
+    public void testThatUpdateBookReturnsWithHttpOk() throws Exception {
+        BookEntity book = TestDataUtils.createTestBook(null);
+        bookService.createBook(book.getIsbn(), book);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/"+book.getIsbn())
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
 }

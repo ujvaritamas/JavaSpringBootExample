@@ -44,4 +44,37 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(isbn);
     }
 
+    @Override
+    public boolean isExists(String isbn) {
+        return bookRepository.existsById(isbn);
+    }
+
+    @Override
+    public BookEntity saveBook(BookEntity book) {
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public BookEntity partialUpdate(String isbn, BookEntity book) {
+        book.setIsbn(isbn);
+        return bookRepository.findById(isbn).map(existingBook -> {
+            Optional.ofNullable(book.getTitle()).ifPresent(existingBook::setTitle);
+            Optional.ofNullable(book.getAuthorEntity()).ifPresent(existingBook::setAuthorEntity);
+            return bookRepository.save(existingBook);
+        }).orElseThrow(() -> new RuntimeException("Book not found."));
+    }
+
+    @Override
+    public BookEntity deleteBook(String isbn) {
+        Optional<BookEntity> foundBook = bookRepository.findById(isbn);
+
+        if(foundBook.isPresent()){
+            bookRepository.delete(foundBook.get());
+            return foundBook.get();
+        }
+        else{
+            throw new RuntimeException("Book does not found");
+        }
+    }
+
 }
