@@ -1,6 +1,8 @@
 package com.example.springboothibernateExample.services;
 
+import com.example.springboothibernateExample.model.Author;
 import com.example.springboothibernateExample.model.Book;
+import com.example.springboothibernateExample.repositories.AuthorRepository;
 import com.example.springboothibernateExample.repositories.BookRepository;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
@@ -14,9 +16,12 @@ import java.util.Optional;
 public class BookService {
     private BookRepository bookRepository;
 
+    private AuthorRepository authorRepository;
+
     @Autowired
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     public List<Book> list() {
@@ -50,4 +55,41 @@ public class BookService {
         }
 
     }
+
+    @Transactional
+    public void addAuthorToBook(Book book, Author author) {
+        // Retrieve the author entity from the repository
+        Optional<Author> authorOptional = authorRepository.findByName(author.getName());
+
+        if (authorOptional.isPresent()) {
+            Author persistedAuthor = authorOptional.get();
+
+            // Retrieve the book entity from the repository
+            Optional<Book> bookOptional = bookRepository.findById(book.getId());
+
+            if (bookOptional.isPresent()) {
+                Book persistedBook = bookOptional.get();
+
+                // Disassociate the book from its current author, if any
+                if (persistedBook.getAuthor() != null) {
+                    persistedBook.getAuthor().getBooks().remove(persistedBook);
+                }
+
+                // Set the book's author to the new author
+                persistedBook.setAuthor(persistedAuthor);
+                persistedAuthor.getBooks().add(persistedBook);
+
+                // Save the updated book entity
+                bookRepository.save(persistedBook);
+            } else {
+                // Set the author for the new book
+                book.setAuthor(persistedAuthor);
+                persistedAuthor.getBooks().add(book);
+
+                // Save the new book entity
+                bookRepository.save(book);
+            }
+        }
+    }
+
 }

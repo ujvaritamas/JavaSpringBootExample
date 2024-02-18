@@ -1,3 +1,4 @@
-insert into book values(1, 'The Tartar Steppe');
-insert into book values(2, 'Poem Strip');
-insert into book values(3, 'Restless Nights: Selected Stories of Dino Buzzati');
+insert into AUTHOR (name) values ('MyAuthorName');
+insert into BOOK (id, name) values (1, 'The Tartar Steppe');
+insert into BOOK (id, name) values (2, 'The Tartar Steppe');
+insert into BOOK (id, name) values (3, 'The Tartar Steppe');
