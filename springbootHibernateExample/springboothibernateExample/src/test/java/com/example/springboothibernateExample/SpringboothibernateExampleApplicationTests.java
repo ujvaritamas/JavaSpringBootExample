@@ -81,4 +81,41 @@ class SpringboothibernateExampleApplicationTests {
 		Assertions.assertEquals(a.getBooks().size(), 1);
 	}
 
+	@Test
+	public void testAuthorAndBookNotInDB(){
+		Book book = new Book(100L, "examplebook", null);
+		Author author = new Author("testAuthorAndBookNotInDB_testauthor");
+
+		Author getAuthor = authorService.getAuthorByName(author.getName());
+		Optional<Book> getBook = bookService.getBook(book.getId());
+
+        Assertions.assertFalse(getBook.isPresent());
+
+        Assertions.assertNull(getAuthor);
+
+		bookService.addAuthorToBook(book, author);
+
+		getBook = bookService.getBook(book.getId());
+		Assertions.assertTrue(getBook.isPresent());
+
+		getAuthor = authorService.getAuthorByName(author.getName());
+		Assertions.assertEquals(author.getName(), getAuthor.getName());
+
+		Assertions.assertEquals(getAuthor.getId(), getBook.get().getAuthor().getId());
+	}
+
+	@Test
+	public void testAuthorInAndBookNotInDB() {
+		Book book = new Book(101L, "examplebook", null);
+		Author author = new Author("testAuthorAndBookNotInDB_testauthor1");
+
+		authorService.saveAuthor(author);
+
+		bookService.addAuthorToBook(book, author);
+
+		Author persistedAuthor = authorService.getAuthorByName(author.getName());
+		Optional<Book> persistedBook = bookService.getBook(book.getId());
+
+		Assertions.assertEquals(persistedAuthor.getId(), persistedBook.get().getAuthor().getId());
+	}
 }

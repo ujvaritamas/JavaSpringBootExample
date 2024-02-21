@@ -60,12 +60,13 @@ public class BookService {
     public void addAuthorToBook(Book book, Author author) {
         // Retrieve the author entity from the repository
         Optional<Author> authorOptional = authorRepository.findByName(author.getName());
+        Optional<Book> bookOptional = bookRepository.findById(book.getId());
 
         if (authorOptional.isPresent()) {
             Author persistedAuthor = authorOptional.get();
 
             // Retrieve the book entity from the repository
-            Optional<Book> bookOptional = bookRepository.findById(book.getId());
+
 
             if (bookOptional.isPresent()) {
                 Book persistedBook = bookOptional.get();
@@ -87,8 +88,34 @@ public class BookService {
                 persistedAuthor.getBooks().add(book);
 
                 // Save the new book entity
+                //bookRepository.save(book);
+            }
+        }
+        else {
+            //Author not in the database
+
+            if(bookOptional.isPresent()){
+                Book persistedBook = bookOptional.get();
+                //book is in the database
+                if(persistedBook.getAuthor() !=null){
+                    //in the end jpa automatically update this author
+                    persistedBook.getAuthor().getBooks().remove(persistedBook);
+                }
+                //in the end new author will be created
+                persistedBook.setAuthor(author);
+            }
+            else{
+                //book and author not in the database
+
+                //first save the author
+                author.getBooks().add(book);
+                authorRepository.save(author);
+
+                book.setAuthor(author);
+
                 bookRepository.save(book);
             }
+
         }
     }
 
